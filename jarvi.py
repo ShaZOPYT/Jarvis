@@ -1,9 +1,7 @@
 import speech_recognition as sr
 import pyttsx3
-import pywhatkit
 import datetime
 import wikipedia
-import pyjokes
 
 # Initialize the speech recognition engine and text-to-speech engine
 recognizer = sr.Recognizer()
@@ -37,7 +35,7 @@ def take_command():
             print("Could not request results; check your network connection.")
             command = ""
         return command
-
+speak("hi i am voice assistant i was developed by Shakthi and Jayanth")
 # Function to get user's name
 def get_name():
     speak("May I know your name?")
@@ -55,29 +53,21 @@ def main():
         if "play" in command:
             song = command.replace("play", "")
             speak("Playing " + song)
-            pywhatkit.playonyt(song)
+            # Add code to play the song using your preferred music player
 
-        elif "time" in command:
-            current_time = datetime.datetime.now().strftime("%H:%M %p")
-            speak("Current time is " + current_time)
+        elif "what is the date" in command:
+            current_date = datetime.datetime.now().strftime("%Y-%m-%d")
+            speak("Today's date is " + current_date)
 
-        elif "search" in command:
-            query = command.replace("search", "")
-            speak("Searching for " + query)
+        elif command.startswith("who is"):
+            topic = command.replace("who is", "").strip()
             try:
-                result = wikipedia.summary(query, sentences=1)
-                speak("According to Wikipedia, " + result)
+                explanation = wikipedia.summary(topic, sentences=2)  # Limit the summary to 2 sentences
+                speak("Here is information about " + topic + ": " + explanation)
             except wikipedia.exceptions.DisambiguationError as e:
                 speak("There are multiple search results. Please be more specific.")
-
-        elif "joke" in command or "tell me a joke" in command:
-            joke = pyjokes.get_joke()
-            speak(joke)
-
-        elif "google" in command:
-            query = command.replace("google", "")
-            speak("Searching on Google for " + query)
-            pywhatkit.search(query)
+            except wikipedia.exceptions.PageError as e:
+                speak("I'm sorry, I couldn't find information about " + topic)
 
         elif "exit" in command or "quit" in command or "bye" in command:
             speak("Goodbye, " + name + "! Have a great day!")
